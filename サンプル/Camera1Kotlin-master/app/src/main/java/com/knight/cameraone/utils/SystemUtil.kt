@@ -106,6 +106,18 @@ class SystemUtil {
          *
          */
         fun saveAlbum(path: String, name: String, context: Context) {
+
+//            ContentResolver
+//
+//            使用ContentResolver调用ContentProvider提供的接口，对ContentProvider中的数据进行添加、删除、修改和查询操作时。
+//
+//            可以使用Activity提供的getContentResolver()方法来获取ContentResolver对象。 ContentResolver 类提供了与ContentProvider类相同签名的四个方法：
+//
+//            public Uri insert(Uri uri, ContentValues values)
+//            public int delete(Uri uri, String selection, String[] selectionArgs)。
+//            public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
+//            public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder)
+//
             //把文件插入到系统图库
             try {
                 MediaStore.Images.Media.insertImage(context.contentResolver, path, name, null)

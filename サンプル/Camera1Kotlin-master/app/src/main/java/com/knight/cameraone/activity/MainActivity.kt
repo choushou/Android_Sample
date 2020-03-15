@@ -11,6 +11,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,6 +22,7 @@ import com.knight.cameraone.R
 import com.knight.cameraone.utils.Permissions
 import com.knight.cameraone.utils.PhotoAlbumUtil
 import com.knight.cameraone.utils.SystemUtil
+import com.knight.cameraone.utils.SystemUtil.Companion.formatRandom
 import com.knight.cameraone.utils.ToastUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -53,6 +55,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         initListener()
         checkNeedPermissions()
 
+        println(formatRandom(4))
+//        println(formatRandom(23))
+//        println(formatRandom(434))
+//        println(formatRandom(8734))
+
+
     }
 
 
@@ -73,11 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun checkNeedPermissions(){
         //6.0以上需要动态申请权限 动态权限校验 Android 6.0 的 oppo & vivo 手机时，始终返回 权限已被允许 但是当真正用到该权限时，却又弹出权限申请框。
         when (Build.VERSION.SDK_INT >= 23){
-            true -> when(ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) !== PackageManager.PERMISSION_GRANTED
-                    || ContextCompat.checkSelfPermission(
+            true -> when (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !== PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) !== PackageManager.PERMISSION_GRANTED
@@ -88,6 +92,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                //多个权限一起申请
                 true -> ActivityCompat.requestPermissions(this,needPermissions,1)
             }
+
+
 
         }
     }
@@ -101,6 +107,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         when(requestCode){
             1 -> when(grantResults.size > 1){
                 true -> when(grantResults[0] == PackageManager.PERMISSION_GRANTED){
@@ -122,7 +129,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      * 调用系统相机
      *
      */
-    fun goSystemCamera(){
+    fun  goSystemCamera(){
        //在根目录创建jpg文件
        cameraSavePath = File(Environment.getExternalStorageDirectory().path + "/" + System.currentTimeMillis() + "jpg")
        //指定跳到系统拍照
@@ -130,6 +137,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
        //适配Android 7.0以上版本应用私有目录限制被访问
        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
            uri = FileProvider.getUriForFile(this,SystemUtil.getPackageName(applicationContext) + ".fileprovider", cameraSavePath!!)
+
+           print(uri)
            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
        }else{
            //7.0以下

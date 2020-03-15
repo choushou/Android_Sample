@@ -42,13 +42,9 @@ class ToastUtil {
          *
          */
         fun showToastMessage(context:Context,message: String,duration:Int){
-            //?.表示如果为空就走右边
-            mToast?:Toast.makeText(context,message,duration)
-            mToast?.setText(message)
-            mToast?.duration = duration
-            mToast?.show()
-        }
 
+          Toast.makeText(context,message,duration).show()
+        }
 
     }
 }
